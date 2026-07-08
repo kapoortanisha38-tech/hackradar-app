@@ -11,6 +11,17 @@ export default function ResumeAnalyzer({ setResumeSkills }: ResumeAnalyzerProps)
   const [fileName, setFileName] = useState("");
   const [extractedSkills, setExtractedSkills] = useState<string[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [manualSkills, setManualSkills] = useState("");
+
+  function handleManualSkills() {
+    const skills = manualSkills
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill.length > 0);
+
+    setExtractedSkills(skills);
+    setResumeSkills(skills);
+  }
 
   async function handleResumeUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -58,17 +69,21 @@ export default function ResumeAnalyzer({ setResumeSkills }: ResumeAnalyzerProps)
       }
 
       if (!resumeText.trim()) {
-        alert("No readable text found in this PDF. Try uploading a text-based resume PDF.");
+        alert("No readable text found in this PDF. Please enter skills manually below.");
         return;
       }
 
       const skills = extractSkillsFromText(resumeText);
 
+      if (skills.length === 0) {
+        alert("Resume was read, but no matching skills were found. You can enter skills manually below.");
+      }
+
       setExtractedSkills(skills);
       setResumeSkills(skills);
     } catch (error) {
       console.error("Resume reading error:", error);
-      alert("Something went wrong while reading the resume. Please try another PDF.");
+      alert("PDF reading failed on this device. Please enter skills manually below.");
     } finally {
       setIsAnalyzing(false);
       event.target.value = "";
@@ -99,6 +114,26 @@ export default function ResumeAnalyzer({ setResumeSkills }: ResumeAnalyzerProps)
               className="hidden"
             />
           </label>
+
+          <div className="mt-6 rounded-xl bg-[#0B0E14] p-4">
+            <p className="text-sm text-gray-400">
+              If resume upload does not work, enter skills manually:
+            </p>
+
+            <input
+              value={manualSkills}
+              onChange={(e) => setManualSkills(e.target.value)}
+              placeholder="Python, React, Firebase, AI"
+              className="mt-3 w-full rounded-xl border border-gray-700 bg-[#11151D] px-4 py-3 text-white outline-none"
+            />
+
+            <button
+              onClick={handleManualSkills}
+              className="mt-4 rounded-xl bg-cyan-500 px-5 py-2 font-semibold text-black hover:bg-cyan-400"
+            >
+              Use Manual Skills
+            </button>
+          </div>
 
           {fileName && (
             <div className="mt-6 rounded-xl bg-[#0B0E14] p-4">
