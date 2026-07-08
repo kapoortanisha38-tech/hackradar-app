@@ -81,13 +81,12 @@ export default function ResumeAnalyzer({ setResumeSkills }: ResumeAnalyzerProps)
 
       setExtractedSkills(skills);
       setResumeSkills(skills);
-    } catch (error) {
-      console.error("Resume reading error:", error);
-      alert("PDF reading failed on this device. Please enter skills manually below.");
-    } finally {
-      setIsAnalyzing(false);
-      event.target.value = "";
-    }
+   } catch (error) {
+  console.error("Resume reading error:", error);
+} finally {
+  setIsAnalyzing(false);
+  event.target.value = "";
+}
   }
 
   return (
