@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { User } from "firebase/auth";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { auth } from "./firebase";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -25,6 +26,14 @@ export default function Home() {
   const [savedHackathons, setSavedHackathons] = useState<number[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [resumeSkills, setResumeSkills] = useState<string[]>([]);
+
+  useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  });
+
+  return () => unsubscribe();
+}, []);
 
   useEffect(() => {
     const savedSkills = localStorage.getItem("resumeSkills");
