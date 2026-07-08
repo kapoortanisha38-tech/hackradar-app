@@ -83,10 +83,12 @@ export default function DiscoveryFeed({ resumeSkills }: DiscoveryFeedProps) {
   };
 
   const filteredHackathons = hackathons.filter((hackathon) => {
-    const searchableText = `${hackathon.title} ${hackathon.organizer} ${hackathon.tags.join(
-      " "
-    )}`.toLowerCase();
-
+   const searchableText = [
+  hackathon.title,
+  hackathon.organizer,
+  hackathon.tags.join(" "),
+  hackathon.requiredSkills.join(" "),
+].join(" ").toLowerCase();
     const matchesSearch = searchableText.includes(searchTerm.toLowerCase());
 
     const matchesFilter =
